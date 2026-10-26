@@ -32,8 +32,6 @@ export const serviceGroups: NavGroup[] = [
       href: `/medical-services/#${service.slug}`,
       icon: service.icon,
     })),
-    // TODO(relink): shown as plain text until this page is ready. To reconnect: remove `disabled: true`.
-    disabled: true,
   },
 ];
 
