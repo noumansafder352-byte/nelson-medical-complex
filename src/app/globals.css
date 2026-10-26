@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — Nelson Lab & Medical Complex
+   The three official brand colours must not be changed:
+     Primary Red  #DA251C · Primary Navy Purple #29176F · White #FFFFFF
+   ========================================================================== */
+:root {
+  /* Official brand palette */
+  --color-primary: #da251c;
+  --color-secondary: #29176f;
+  --color-white: #ffffff;
+
+  /* Interaction shades derived from the brand colours (hover / pressed only) */
+  --color-primary-strong: #b81e16;
+  --color-secondary-strong: #1d0f52;
+
+  /* Neutrals (cool, slightly violet to sit beside the navy purple) */
+  --color-text: #24222e;
+  --color-muted: #5f5d6b;
+  --color-border: #e5e4ec;
+  --color-surface: #f7f7fa;
+  --color-surface-strong: #efeef5;
+  --color-secondary-tint: #eeebf7;
+  --color-primary-tint: #fcecea;
+
+  --container-width: 1320px;
+  --header-height: 80px;
+  --topbar-height: 40px;
+  /* Full height of the sticky header (top bar + main row). Heroes are pulled up by this. */
+  --header-total: calc(var(--header-height) + var(--topbar-height));
+
+  --radius-small: 8px;
+  --radius-medium: 14px;
+  --radius-large: 22px;
+
+  --shadow-soft: 0 1px 2px rgb(41 23 111 / 0.04), 0 8px 24px -12px rgb(41 23 111 / 0.14);
+  --shadow-raised: 0 2px 4px rgb(41 23 111 / 0.05), 0 18px 40px -18px rgb(41 23 111 / 0.28);
+}
+
+@theme inline {
+  --color-brand-red: var(--color-primary);
+  --color-brand-red-strong: var(--color-primary-strong);
+  --color-brand-red-tint: var(--color-primary-tint);
+  --color-brand-navy: var(--color-secondary);
+  --color-brand-navy-strong: var(--color-secondary-strong);
+  --color-brand-navy-tint: var(--color-secondary-tint);
+  --color-ink: var(--color-text);
+  --color-subtle: var(--color-muted);
+  --color-line: var(--color-border);
+  --color-canvas: var(--color-surface);
+  --color-canvas-strong: var(--color-surface-strong);
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), var(--font-body), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius-medium);
+  --radius-lg: var(--radius-large);
+
+  --shadow-card: var(--shadow-soft);
+  --shadow-lift: var(--shadow-raised);
+
+  --container-site: var(--container-width);
+}
+
+/* ---------- Base ----------
+   Kept inside @layer base so Tailwind utilities (e.g. text-white on a
+   heading) always win over these element defaults. */
+@layer base {
+html {
+  scroll-padding-top: calc(var(--header-total) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--color-secondary);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Smaller placeholder text in all inputs, so hints fit without being cut off.
+   Typed text keeps the input's normal size. */
+input::placeholder,
+textarea::placeholder {
+  font-size: 0.80rem;
+}
+
+::selection {
+  background: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* Visible, consistent focus indicator for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--color-white);
+}
+}
+
+@layer components {
+/* Subtle brand grid pattern used on artwork panels */
+.brand-grid {
+  background-image:
+    linear-gradient(to right, rgb(41 23 111 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(41 23 111 / 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.brand-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Premium button hover: lifts, glows in the button's own colour and a light
+   sheen sweeps across. Each variant sets --btn-glow and --btn-shine (Button.tsx). */
+.btn-premium {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, var(--btn-shine, rgb(255 255 255 / 0.35)) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.btn-premium .btn-arrow {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .btn-premium:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -12px var(--btn-glow, rgb(41 23 111 / 0.45));
+  }
+
+  .btn-premium:not(:disabled):hover::before {
+    transform: translateX(120%);
+  }
+
+  .btn-premium:not(:disabled):hover .btn-arrow {
+    transform: translateX(4px);
+  }
+}
+
+.btn-premium:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 6px 14px -10px var(--btn-glow, rgb(41 23 111 / 0.45));
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
